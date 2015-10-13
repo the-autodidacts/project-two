@@ -7,6 +7,7 @@ var express             = require('express'),
     ejs                 = require('ejs'),
     expressEjsLayouts   = require('express-ejs-layouts'),
     session             = require('express-session'),
+    methodOverride      = require('method-override'),
     mongoose            = require('mongoose'),
     morgan              = require('morgan');
 
@@ -18,18 +19,25 @@ server.use('/article', articleController);
 
 // article is the datatype the object that follows it is the configuration schema
 //object id and populate or embed author object
-    var Article = mongoose.model ('article', {
-      author:         Object,
-      title:          String,
-      content:        String,
-      lastEdit:       Date,
-      lastEditAuthor: Object
-    });
+var Article = mongoose.model ('article', {
+    author:         Object,
+    title:          String,
+    content:        String,
+    lastEdit:       Date,
+    lastEditAuthor: Object
+});
+
+server.use(session({
+  secret: "hungryhippoballingspalding",
+  resave: true,
+  saveUninitialized: true
+}));
 
 ///////////Server Set UP and Use///////////////
 server.set('views', './views');
 server.set('view engine', 'ejs');
 
+server.use(methodOverride('_method'));
 server.use(morgan('dev'));
 server.use(express.static('./public'));
 server.use(expressEjsLayouts);
@@ -38,18 +46,34 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use(function (req, res, next) {
   console.log("REQ DOT BODY", req.body);
   console.log("REQ DOT PARAMS", req.params);
-  console.log("RES DOT BODY", res.body);
+  console.log("REQ DOT SESSION", res.sessions);
   next();
 });
 
 server.get('/', function(req, res) {
+  res.locals.author = undefined;
   res.render('index');
 });
+
+server.post('/', function (req, res) {
+  req.session.authorName = req.body.author.name
+  res.redirect(302, '/')
+});
+
+server.use(function (req, res, next) {
+  if (req.session.authorName == undefined) {
+    res.redirect(302, '/')
+  } else {
+    res.locals.author.name = req.session.author.name
+  }
+})
+
 
 server.get('/signup', function (req, res) {
   res.render('signup')
 
 });
+// Begin article routes
 server.get('/latest', function (req, res){
   Article.find ({}, function (err, allArticles){
     if (err){
@@ -72,8 +96,6 @@ server.post('/latest', function (req, res) {
     title:    req.body.article.title,
     content:  req.body.article.content
   });
-  console.log(req.body.article)
-
   article.save(function(err, newArticle){
     if (err){
       res.redirect(302, '/new')
@@ -81,6 +103,45 @@ server.post('/latest', function (req, res) {
       res.redirect(302, '/latest')
     }
   })
+});
+
+server.get('/:id/edit', function (req, res) {
+  var articleID = req.params.id;
+
+  Article.findOne({
+    _id: articleID
+  }, function (err, foundArticle){
+    if (err){
+      res.write("Article ID is bad")
+      res.end();
+    } else {
+      res.render('edit', {
+        article: foundArticle
+      });
+    }
+  });
+});
+
+server.patch('/:id', function (req, res) {
+  var articleID = req.params.id;
+  var articleParams = req.body.article;
+
+  Article.findOne({
+    _id: articleID
+  }, function (err, foundArticle){
+    if (err){
+      console.log(err)
+    } else {
+      foundArticle.update(articleParams, function (errTwo, article) {
+        if (errTwo){
+          console.log("ERROR UPDATING");
+    } else {
+        console.log("UPDATED")
+        res.redirect(302, 'latest')
+        }
+      })
+    }
+  });
 });
 
 mongoose.connect(MONGOURI + "/" + DBNAME);
