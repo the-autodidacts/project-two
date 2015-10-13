@@ -1,0 +1,20 @@
+<a href="/new"><h3>Create New Article</h3></a>
+
+<% articles.forEach(function (article){%>
+
+  <div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><%=article.title %></h3>
+  </div>
+  <div class="panel-body">
+    <p>
+      <%=article.content %> --
+      <a href="/<%= article.author %>">
+        <%= article.author %>
+      </a>
+      <a href="/<%= article.id %>/edit">[ edit ]</a>
+    </p>
+  </div>
+</div>
+
+<%})%>
