@@ -62,6 +62,10 @@ server.get('/latest', function (req, res){
   });
 });
 
+server.get('/new', function (req, res) {
+  res.render('new');
+});
+
 server.post('/latest', function (req, res) {
   var article = new Article ({
     //author:   req.session.authorName,
@@ -70,11 +74,11 @@ server.post('/latest', function (req, res) {
   });
   console.log(req.body.article)
 
-  tweet.save(function(err, newArticle){
+  article.save(function(err, newArticle){
     if (err){
-      res.redirect(302, 'new')
+      res.redirect(302, '/new')
     }else{
-      res.redirect(302, 'latest')
+      res.redirect(302, '/latest')
     }
   })
 });
