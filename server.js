@@ -37,6 +37,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 
 server.use(function (req, res, next) {
   console.log("REQ DOT BODY", req.body);
+  console.log("REQ DOT PARAMS", req.params);
   console.log("RES DOT BODY", res.body);
   next();
 });
@@ -49,9 +50,33 @@ server.get('/signup', function (req, res) {
   res.render('signup')
 
 });
+server.get('/latest', function (req, res){
+  Article.find ({}, function (err, allArticles){
+    if (err){
+      res.redirect(302, '/' )
+    } else {
+      res.render('latest', {
+        articles: allArticles
+      });
+    }
+  });
+});
 
-server.get('/latest', function (req, res) {
- res.render('latest')
+server.post('/latest', function (req, res) {
+  var article = new Article ({
+    //author:   req.session.authorName,
+    title:    req.body.article.title,
+    content:  req.body.article.content
+  });
+  console.log(req.body.article)
+
+  tweet.save(function(err, newArticle){
+    if (err){
+      res.redirect(302, 'new')
+    }else{
+      res.redirect(302, 'latest')
+    }
+  })
 });
 
 mongoose.connect(MONGOURI + "/" + DBNAME);

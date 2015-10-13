@@ -1,6 +1,7 @@
-<h3>New article for <%= author %></h3>
+<h3>New article for <%= //author %></h3>
 
-<form action="/latest" method="post">
+<form action="latest" method="post">
+  <input type="text" name="article[title]" placeholder="title">
   <input type="textarea"
          name="article[content]"
          placeholder="Content of article" ><br/>
