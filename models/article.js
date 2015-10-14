@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
 
 // article is the datatype the object that follows it is the configuration schema
 //object id and populate or embed author object
-var Article = mongoose.model ('article', {
+var articleSchema = Schema({
     author:         Object,
     title:          String,
     content:        String,

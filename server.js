@@ -9,11 +9,11 @@ var express             = require('express'),
     session             = require('express-session'),
     methodOverride      = require('method-override'),
     mongoose            = require('mongoose'),
-    morgan              = require('morgan');
-    userController      = require ('./controllers/users.js')
-
-
-
+    morgan              = require('morgan'),
+    userController      = require('./controllers/users.js'),
+    articleController   = require('./controllers/articles.js');
+    
+//Session
 server.use(session({
   secret: "hungryhippoballingspalding",
   resave: false,
@@ -30,24 +30,18 @@ server.use(express.static('./public'));
 server.use(expressEjsLayouts);
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use('/users', userController);
+server.use('/articles', articleController);
 
-//All Purpose LOGGER
-server.use(function (req, res, next) {
-  console.log("REQ DOT BODY", req.body);
-  console.log("REQ DOT PARAMS", req.params);
-  console.log("REQ DOT SESSION", req.session);
-  next();
+//Home Route
+server.get('/', function(req, res) {
+  res.locals.author = undefined;
+  res.render('index');
 });
+
 //Catch All Route
 server.use(function (req, res, next) {
   res.send("No More Routes");
   res.end();
-});
-
-
-server.get('/', function(req, res) {
-  res.locals.author = undefined;
-  res.render('index');
 });
 
 mongoose.connect(MONGOURI + "/" + DBNAME);

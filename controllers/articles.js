@@ -2,8 +2,16 @@ var express = require('express'),
     router  = express.Router(),
     Article    = require('../models/article.js');
 
-    // Begin article routes
-server.get('/articles/latest', function (req, res){
+//All Purpose LOGGER
+router.use(function (req, res, next) {
+  console.log("REQ DOT BODY", req.body);
+  console.log("REQ DOT PARAMS", req.params);
+  console.log("REQ DOT SESSION", req.session);
+  next();
+});
+
+// Begin article routes
+router.get('/latest', function (req, res){
   Article.find ({}, function (err, allArticles){
     if (err){
       res.redirect(302, '/' )
@@ -15,13 +23,12 @@ server.get('/articles/latest', function (req, res){
   });
 });
 
-server.get('/articles/new', function (req, res) {
+router.get('/articles/new', function (req, res) {
   res.render('articles/new');
 });
 
-server.post('/articles/latest', function (req, res) {
+router.post('/articles/latest', function (req, res) {
   var article = new Article ({
-    //author:   req.session.authorName,
     title:    req.body.article.title,
     content:  req.body.article.content
   });
@@ -34,7 +41,7 @@ server.post('/articles/latest', function (req, res) {
   })
 });
 
-server.get('/articles/:id/edit', function (req, res) {
+router.get('/articles/:id/edit', function (req, res) {
   var articleID = req.params.id;
 
   Article.findOne({
@@ -51,7 +58,7 @@ server.get('/articles/:id/edit', function (req, res) {
   });
 });
 
-server.patch('/articles/:id', function (req, res) {
+router.patch('/articles/:id', function (req, res) {
   var articleID = req.params.id;
   var articleParams = req.body.article;
 
