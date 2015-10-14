@@ -12,12 +12,12 @@ var express             = require('express'),
     morgan              = require('morgan'),
     userController      = require('./controllers/users.js'),
     articleController   = require('./controllers/articles.js');
-    
+
 //Session
 server.use(session({
   secret: "hungryhippoballingspalding",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: true
 }));
 
 ///////////Server Set UP and Use Defaults///////////////

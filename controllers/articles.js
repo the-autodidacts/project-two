@@ -4,6 +4,7 @@ var express = require('express'),
 
 //All Purpose LOGGER
 router.use(function (req, res, next) {
+  console.log("============Article Routes==============");
   console.log("REQ DOT BODY", req.body);
   console.log("REQ DOT PARAMS", req.params);
   console.log("REQ DOT SESSION", req.session);
@@ -23,25 +24,26 @@ router.get('/latest', function (req, res){
   });
 });
 
-router.get('/articles/new', function (req, res) {
+router.get('/new', function (req, res) {
   res.render('articles/new');
 });
 
-router.post('/articles/latest', function (req, res) {
+router.post('/latest', function (req, res) {
   var article = new Article ({
     title:    req.body.article.title,
     content:  req.body.article.content
+
   });
   article.save(function(err, newArticle){
     if (err){
-      res.redirect(302, 'articles/new')
+      res.redirect(302, '/articles/new')
     }else{
-      res.redirect(302, 'articles/latest')
+      res.redirect(302, '/articles/latest')
     }
   })
 });
 
-router.get('/articles/:id/edit', function (req, res) {
+router.get('/:id/edit', function (req, res) {
   var articleID = req.params.id;
 
   Article.findOne({
@@ -58,7 +60,7 @@ router.get('/articles/:id/edit', function (req, res) {
   });
 });
 
-router.patch('/articles/:id', function (req, res) {
+router.patch('/:id', function (req, res) {
   var articleID = req.params.id;
   var articleParams = req.body.article;
 
