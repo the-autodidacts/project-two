@@ -1,0 +1,18 @@
+<form action="/<%= article.id%>?_method=PATCH" method="post">
+  <div class="form-group">
+    <input type="text"
+           class="form-control"
+           name="article[title]"
+           placeholder="title of article"
+           value="<%= article.title%>">
+  </div><br/>
+  <div class="form-group">
+    <textarea
+              class="form-control"
+              rows="10"
+              name="article[content]"
+              placeholder="<%= article.content %>">
+    </textarea>
+  </div><br/>
+  <input type="submit">
+</form>

@@ -29,8 +29,8 @@ var Article = mongoose.model ('article', {
 
 server.use(session({
   secret: "hungryhippoballingspalding",
-  resave: true,
-  saveUninitialized: true
+  resave: false,
+  saveUninitialized: false
 }));
 
 ///////////Server Set UP and Use///////////////
@@ -46,7 +46,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use(function (req, res, next) {
   console.log("REQ DOT BODY", req.body);
   console.log("REQ DOT PARAMS", req.params);
-  console.log("REQ DOT SESSION", res.sessions);
+  console.log("REQ DOT SESSION", req.session);
   next();
 });
 
@@ -54,43 +54,43 @@ server.get('/', function(req, res) {
   res.locals.author = undefined;
   res.render('index');
 });
+//
+// server.post('/', function (req, res) {
+//   req.session.authorName = req.body.author.name
+//   res.redirect(302, '/')
+// });
+//
+// server.use(function (req, res, next) {
+//   if (req.session.authorName == undefined) {
+//     res.redirect(302, '/')
+//   } else {
+//     res.locals.author.name = req.session.author.name
+//   }
+// })
 
-server.post('/', function (req, res) {
-  req.session.authorName = req.body.author.name
-  res.redirect(302, '/')
-});
-
-server.use(function (req, res, next) {
-  if (req.session.authorName == undefined) {
-    res.redirect(302, '/')
-  } else {
-    res.locals.author.name = req.session.author.name
-  }
-})
-
-
-server.get('/signup', function (req, res) {
-  res.render('signup')
+//User Routes
+server.get('/users/signup', function (req, res) {
+  res.render('users/signup')
 
 });
 // Begin article routes
-server.get('/latest', function (req, res){
+server.get('/articles/latest', function (req, res){
   Article.find ({}, function (err, allArticles){
     if (err){
       res.redirect(302, '/' )
     } else {
-      res.render('latest', {
+      res.render('articles/latest', {
         articles: allArticles
       });
     }
   });
 });
 
-server.get('/new', function (req, res) {
-  res.render('new');
+server.get('/articles/new', function (req, res) {
+  res.render('articles/new');
 });
 
-server.post('/latest', function (req, res) {
+server.post('/articles/latest', function (req, res) {
   var article = new Article ({
     //author:   req.session.authorName,
     title:    req.body.article.title,
@@ -98,14 +98,14 @@ server.post('/latest', function (req, res) {
   });
   article.save(function(err, newArticle){
     if (err){
-      res.redirect(302, '/new')
+      res.redirect(302, 'articles/new')
     }else{
-      res.redirect(302, '/latest')
+      res.redirect(302, 'articles/latest')
     }
   })
 });
 
-server.get('/:id/edit', function (req, res) {
+server.get('/articles/:id/edit', function (req, res) {
   var articleID = req.params.id;
 
   Article.findOne({
@@ -115,14 +115,14 @@ server.get('/:id/edit', function (req, res) {
       res.write("Article ID is bad")
       res.end();
     } else {
-      res.render('edit', {
+      res.render('articles/edit', {
         article: foundArticle
       });
     }
   });
 });
 
-server.patch('/:id', function (req, res) {
+server.patch('/articles/:id', function (req, res) {
   var articleID = req.params.id;
   var articleParams = req.body.article;
 

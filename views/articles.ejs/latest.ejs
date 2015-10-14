@@ -1,4 +1,4 @@
-<a href="new"><h3>Create New Article</h3></a>
+<a href="/articles/new"><h3>Create New Article</h3></a>
 
 <% articles.forEach(function (article){%>
 
@@ -12,7 +12,7 @@
       <a href="/<%= article.author %>">
         <%= article.author %>
       </a>
-      <a href="/<%= article.id %>/edit">[ edit ]</a>
+      <a href="/articles/<%= article.id %>/edit">[ edit ]</a>
     </p>
   </div>
 </div>
