@@ -13,15 +13,20 @@ router.use(function (req, res, next) {
 
 // Begin article routes
 router.get('/latest', function (req, res){
-  Article.find ({}, function (err, allArticles){
-    if (err){
-      res.redirect(302, '/' )
-    } else {
-      res.render('articles/latest', {
-        articles: allArticles
-      });
-    }
-  });
+  if (req.session.currentUser){
+    res.redirect(302, '/');
+  }
+  else {
+    Article.find ({}, function (err, allArticles){
+      if (err){
+        res.redirect(302, '/' )
+      } else {
+        res.render('articles/latest', {
+          articles: allArticles
+        });
+      }
+    });
+  }
 });
 
 router.get('/new', function (req, res) {

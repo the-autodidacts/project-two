@@ -20,6 +20,13 @@ server.use(session({
   saveUninitialized: true
 }));
 
+server.use(function (req, res, next) {
+  res.locals.currentUser = req.session.currentUser || {};
+  req.session.currentUser = {};
+  console.log("RESDOTLOCALS:  ", res.locals.currentUser);
+  next();
+});
+
 ///////////Server Set UP and Use Defaults///////////////
 server.set('views', './views');
 server.set('view engine', 'ejs');
@@ -31,6 +38,9 @@ server.use(expressEjsLayouts);
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use('/users', userController);
 server.use('/articles', articleController);
+
+
+
 
 //Home Route
 server.get('/', function(req, res) {
