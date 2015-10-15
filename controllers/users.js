@@ -12,34 +12,44 @@ router.use(function (req, res, next) {
 });
 
 
-//define routes for the router
+//define routes for the router /users/signup
 router.get('/signup', function (req, res) {
   res.render('users/signup')
 });
 
-router.post('/', function (req, res) {
+//New user creation from signup form action /users/signup
+router.post('/signup', function (req, res) {
   var newUser = User(req.body.user);
   newUser.save(function (err, user) {
-    res.redirect(301, "/users/" + user._id)
+    if (err){
+      console.log(err)
+    } else {
+      res.redirect(301, "/users/" + user._id)
+      }
   });
 });
 
-router.post('/signup', function (req, res) {
-  console.log("entering post")
+// nav signin route set to /users
+router.post('/', function (req, res) {
   var attempt = req.body.user;
-  User.findOne({ email: attempt.email}, function (err, user) {
-    if (err){
-      console.log(err);
+  console.log("outside", req.body.user);
+  User.findOne({ email: attempt.email }, function (err, user) {
+    if (user && user.password === attempt.password) {
+      req.session.currentUser = user;
+      req.session.currentUser.login = 1;
+      console.log('=======currentUser');
+      console.log(req.session.currentUser.login);
+      res.redirect(302, "/articles/latest")
     }else {
-    req.session.user = user;
-    res.redirect(302, '/');
+      console.log("no user with that name or password");
+      res.write("No! You no welcome");
+      res.end();
     }
   });
 });
 
 router.get('/:id', function (req, res) {
   User.findById(req.params.id, function (err, user) {
-    console.log(user);
   });
 });
 // export router objects

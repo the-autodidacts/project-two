@@ -38,6 +38,16 @@ server.get('/', function(req, res) {
   res.render('index');
 });
 
+server.get('/welcome', function (req, res) {
+  if (req.session.currentUser) {
+    res.render('welcome' , {
+      currentUser: req.session.currentUser
+    });
+  } else {
+    res.redirect(301, '/users/signup')
+  }
+});
+
 //Catch All Route
 server.use(function (req, res, next) {
   res.send("No More Routes");

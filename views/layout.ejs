@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
     <meta charset="utf-8">
     <title>ChangeMe</title>
+
+<%= console.log('Hi There')%>
+<style>
+</style>
+
   </head>
 
 
@@ -32,8 +37,8 @@
               <li class="active"><a href="/users/signup">Sign Up<span class="sr-only">(current)</span></a></li>
               <li><a href="/search">Search</a></li>
               <li><a href="/articles/latest">Latest</a></li>
-      <%= /*script to hide sign in and display logout */ %>
-              <form action="/users/signup"
+
+              <form action="/users"
                     method="post"
                     class="navbar-form navbar-right">
                 <div class="form-group">
