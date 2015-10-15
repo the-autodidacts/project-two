@@ -60,8 +60,7 @@ server.get('/welcome', function (req, res) {
 
 //Catch All Route
 server.use(function (req, res, next) {
-  res.send("No More Routes");
-  res.end();
+  res.render('404')
 });
 
 mongoose.connect(MONGOURI + "/" + DBNAME);
