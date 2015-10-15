@@ -11,6 +11,10 @@ router.use(function (req, res, next) {
   next();
 });
 
+router.get('/articles/latest', function (req, res) {
+  res.render('articles/latest')
+});
+
 
 //define routes for the router /users/signup
 router.get('/signup', function (req, res) {
@@ -21,6 +25,16 @@ router.get('/loginfail', function (req, res) {
   res.render('users/loginfail')
 });
 
+router.get('/signout', function (req, res) {
+  res.render('users/signout')
+});
+
+router.post('/signout', function (req, res) {
+  req.session.destroy();
+  res.locals = req.session;
+  res.redirect('signout');
+  console.log("Signing OUT")
+});
 
 //New user creation from signup form action /users/signup
 router.post('/signup', function (req, res) {
@@ -29,7 +43,7 @@ router.post('/signup', function (req, res) {
     if (err){
       console.log(err)
     } else {
-      res.redirect(301, "/users/" + user._id)
+      res.redirect(301, '/articles/latest')
       }
   });
 });
@@ -37,14 +51,13 @@ router.post('/signup', function (req, res) {
 // nav signin route set to /users
 router.post('/', function (req, res) {
   var attempt = req.body.user;
-  console.log("outside", req.body.user);
   User.findOne({ email: attempt.email }, function (err, user) {
     if (err) {
-      console.log("Somme Error Has Occurred: ", err);
+      console.log("Somme Error Has Occurred: ");
     }
-    else if (user & user.password === attempt.password) {
+    else if (user && user.password === attempt.password) {
       req.session.currentUser = user;
-      res.redirect(302, "/articles/latest")
+      res.redirect(302, "articles/latest")
     }else {
       console.log("no user with that name or password");
       res.redirect(302, 'users/loginfail')

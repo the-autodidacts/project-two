@@ -13,7 +13,7 @@ router.use(function (req, res, next) {
 
 // Begin article routes
 router.get('/latest', function (req, res){
-  if (req.session.currentUser){
+  if (!res.locals.currentUser.email){
     res.redirect(302, '/');
   }
   else {
@@ -30,22 +30,33 @@ router.get('/latest', function (req, res){
 });
 
 router.get('/new', function (req, res) {
+  if (!res.locals.currentUser.email){
+    res.redirect(302, '/');
+  }
+  else {
   res.render('articles/new');
+  }
 });
 
 router.post('/latest', function (req, res) {
-  var article = new Article ({
-    title:    req.body.article.title,
-    content:  req.body.article.content
+  if (!res.locals.currentUser.email){
+    res.redirect(302, '/');
+  }else {
+    var article = new Article ({
+      author:   res.locals.currentUser,
+      title:    req.body.article.title,
+      content:  req.body.article.content,
+      date:     Date()
 
-  });
-  article.save(function(err, newArticle){
-    if (err){
-      res.redirect(302, '/articles/new')
-    }else{
-      res.redirect(302, '/articles/latest')
-    }
-  })
+    });
+    article.save(function(err, newArticle){
+      if (err){
+        res.redirect(302, '/articles/new')
+      }else{
+        res.redirect(302, '/articles/latest')
+      }
+    })
+  }
 });
 
 router.get('/:id/edit', function (req, res) {

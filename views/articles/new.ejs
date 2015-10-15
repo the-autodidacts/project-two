@@ -1,4 +1,6 @@
-<h3>New article</h3>
+<h3>New article by <%- currentUser.firstName %>
+</h3>
+<%=console.log("AHHHH",currentUser)%>
 
 <form action="/articles/latest" method="post">
   <div class="form-group">

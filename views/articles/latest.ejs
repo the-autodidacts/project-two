@@ -9,9 +9,12 @@
   <div class="panel-body">
     <p>
       <%= article.content %> --
-      <a href="/<%= article.author %>">
-        <%= article.author %>
+
+        <%if (article.author){%>
+          <a href="/<%= article.author._id %>">
+        <%= article.author.firstName %> <%}%>
       </a>
+      
       <a href="/articles/<%= article.id %>/edit">[ edit ]</a>
     </p>
   </div>
