@@ -5,8 +5,10 @@ var userSchema = Schema({
 firstName: { type: String },
 lastName:  { type: String },
 login:     { type: Number},
+articles:  { type: Object},
 email:     { type: String, required: true},
 password:  { type: String, required: true}
+
 });
 
 
