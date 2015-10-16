@@ -1,6 +1,11 @@
 var express    = require('express'),
     router     = express.Router(),
-    Article    = require('../models/article.js');
+    Article    = require('../models/article.js'),
+    date       = new Date(),
+    month      = date.getMonth() + 1,
+    day        = date.getDate().toString(),
+    year       = date.getFullYear().toString(),
+    dateString = month.toString() + "/" + day + "/" + year;
 
 //All Purpose LOGGER
 router.use(function (req, res, next) {
@@ -29,6 +34,14 @@ router.get('/latest', function (req, res){
   }
 });
 
+router.get('/:id/show', function (req, res) {
+  if (!res.locals.currentUser.email){
+    res.redirect(302, '/');
+  } else {
+      res.render('article/show')
+  }
+});
+
 router.get('/new', function (req, res) {
   if (!res.locals.currentUser.email){
     res.redirect(302, '/');
@@ -46,8 +59,7 @@ router.post('/latest', function (req, res) {
       author:   res.locals.currentUser,
       title:    req.body.article.title,
       content:  req.body.article.content,
-      date:     Date()
-
+      lastEdit: dateString
     });
     article.save(function(err, newArticle){
       if (err){
@@ -77,8 +89,10 @@ router.get('/:id/edit', function (req, res) {
 });
 
 router.patch('/:id', function (req, res) {
-  var articleID = req.params.id;
-  var articleParams = req.body.article;
+  var articleID                = req.params.id,
+  articleParams                = req.body.article;  articleParams.lastEdit       = dateString,
+  articleParams.lastEditAuthor = res.locals.currentUser.firstName;
+
 
   Article.findOne({
     _id: articleID
@@ -97,6 +111,8 @@ router.patch('/:id', function (req, res) {
     }
   });
 });
+
+
 
 // export router objects
 module.exports = router;

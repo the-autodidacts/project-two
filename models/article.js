@@ -7,7 +7,7 @@ var articleSchema = Schema({
     author:         Object,
     title:          String,
     content:        String,
-    lastEdit:       Date,
+    lastEdit:       String,
     lastEditAuthor: Object
 });
 

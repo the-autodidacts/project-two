@@ -1,7 +1,4 @@
-<h3>New article by <%- currentUser.firstName %>
-</h3>
-<%=console.log("AHHHH",currentUser)%>
-
+<h3>New article by: <%- currentUser.firstName.toUpperCase(); %></h3>
 <form action="/articles/latest" method="post">
   <div class="form-group">
     <input type="text"

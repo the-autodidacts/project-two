@@ -1,10 +1,9 @@
 <a href="/articles/new"><h3>Create New Article</h3></a>
 
 <% articles.forEach(function (article){%>
-
   <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title"><%= article.title %></h3>
+    <h3 class="panel-title"><a href="<%=/articles/article._id%>"><%= article.title %></h3></a>
   </div>
   <div class="panel-body">
     <p>
@@ -14,8 +13,8 @@
           <a href="/<%= article.author._id %>">
         <%= article.author.firstName %> <%}%>
       </a>
-      
       <a href="/articles/<%= article.id %>/edit">[ edit ]</a>
+      last edit   <%= article.lastEdit %> by: <%= article.lastEditAuthor%>
     </p>
   </div>
 </div>

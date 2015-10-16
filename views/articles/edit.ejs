@@ -1,3 +1,4 @@
+<h3> Article '<%= article.title%>' will show edited by: <%= currentUser.firstName.toUpperCase();%></h3>
 <form action="/articles/<%= article.id%>?_method=PATCH" method="post">
   <div class="form-group">
     <input type="text"

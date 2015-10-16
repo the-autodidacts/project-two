@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+<div class="panel-heading">
+  <h3 class="panel-title"><%= article.title %></h3>
+</div>
+<div class="panel-body">
+  <p>
+    <%= article.content %> --
+
+      <%if (article.author){%>
+        <a href="/<%= article.author._id %>">
+      <%= article.author.firstName %> <%}%>
+    </a>
+    <a href="/articles/<%= article.id %>/edit">[ edit ]</a>
+    last edit   <%= article.lastEdit %> by: <%= article.lastEditAuthor%>
+  </p>
+  <form  action=""/articles/<%= article.id%>?_method=DELETE"  method="post">
+    <input type="submit" value="DELETE">
+  </form>
+</div>
+</div>
